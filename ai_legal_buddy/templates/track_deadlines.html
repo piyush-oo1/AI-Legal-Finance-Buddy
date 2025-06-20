@@ -1,0 +1,26 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Track Legal Deadlines</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 40px; background: #f9f9f9; }
+    h1 { color: #333; }
+    label { font-weight: bold; display: block; margin-top: 20px; }
+    textarea, select, input[type="text"] { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; }
+    button { margin-top: 20px; padding: 10px 20px; background: #007bff; color: #fff; border: none; cursor: pointer; }
+    button:hover { background: #0056b3; }
+    pre { white-space: pre-wrap; background: #fff; padding: 10px; border: 1px solid #ddd; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Track Legal Deadlines</h1>
+  <form method="post" action="/track_deadlines">
+    <select name="business_type">
+      <option value="llc">LLC</option>
+      <option value="sole">Sole Proprietor</option>
+      <option value="partnership">Partnership</option>
+    </select>
+    <button type="submit">Check Deadlines</button>
+  </form>
+</body>
+</html>

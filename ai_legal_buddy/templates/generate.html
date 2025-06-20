@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Generate Legal Document</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 40px; background: #f9f9f9; }
+    h1 { color: #333; }
+    label { font-weight: bold; display: block; margin-top: 20px; }
+    textarea, select, input[type="text"] { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; }
+    button { margin-top: 20px; padding: 10px 20px; background: #007bff; color: #fff; border: none; cursor: pointer; }
+    button:hover { background: #0056b3; }
+    pre { white-space: pre-wrap; background: #fff; padding: 10px; border: 1px solid #ddd; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h1>AI Legal Document Generator</h1>
+  <form method="post" action="/generate">
+    <label for="doc_type">Document Type:</label>
+    <select id="doc_type" name="doc_type" onchange="populateSummary()">
+      <option value="">Select a type...</option>
+      <option value="Non-Disclosure Agreement (NDA)">NDA</option>
+      <option value="Service Agreement">Service Agreement</option>
+      <option value="Lease Agreement (Commercial)">Lease Agreement</option>
+      <option value="Employment Agreement">Employment Agreement</option>
+      <option value="Partnership Agreement">Partnership Agreement</option>
+      <option value="Website Terms & Conditions">Website T&C</option>
+    </select>
+
+    <label for="terms">Key Parties & Terms:</label>
+    <textarea id="terms" name="terms" rows="10"></textarea>
+
+    <button type="submit">Generate</button>
+  </form>
+</body>
+</html>
+
+<script>
+    const summaries = {
+      "Non-Disclosure Agreement (NDA)": `Disclosing Party: [Company A]
+  Receiving Party: [Company B]
+  Definition of Confidential Info, Obligations, Exclusions, Term, Governing Law.`,
+  
+      "Service Agreement": `Service Provider: [Provider Name]
+  Client: [Client Name]
+  Scope, Fees, Termination, Confidentiality, IP Ownership, Liability.`,
+  
+      "Lease Agreement (Commercial)": `Landlord: [Landlord Name]
+  Tenant: [Tenant Name]
+  Premises, Term, Rent, Repairs, Default.`,
+  
+      "Employment Agreement": `Employer: [Company Name]
+  Employee: [Employee Name]
+  Position, Salary, Confidentiality, Termination, Non-Compete.`,
+  
+      "Partnership Agreement": `Partner A: [Name]
+  Partner B: [Name]
+  Purpose, Contributions, Profit Sharing, Voting, Withdrawal.`,
+  
+      "Website Terms & Conditions": `Provider: [Company Name]
+  User: Any visitor of [website URL]
+  Terms Acceptance, User Conduct, IP, Liability, Governing Law.`
+    };
+  
+    function populateSummary() {
+      const selected = document.getElementById("doc_type").value;
+      if (summaries[selected]) {
+        document.getElementById("terms").value = summaries[selected];
+      }
+    }
+  </script>
+  

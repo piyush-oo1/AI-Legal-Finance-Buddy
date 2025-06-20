@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Legal Assistant</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 40px; background: #f9f9f9; }
+    h1 { color: #333; }
+    label { font-weight: bold; display: block; margin-top: 20px; }
+    textarea, select, input[type="text"] { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; }
+    button { margin-top: 20px; padding: 10px 20px; background: #007bff; color: #fff; border: none; cursor: pointer; }
+    button:hover { background: #0056b3; }
+    pre { white-space: pre-wrap; background: #fff; padding: 10px; border: 1px solid #ddd; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h1>AI Legal Document Assistant</h1>
+  <form method="post" action="/generate">
+    <label for="doc_type">Document Type:</label>
+    <select id="doc_type" name="doc_type" onchange="populateSummary()">
+      <option value="">Select a type...</option>
+      <option value="Non-Disclosure Agreement (NDA)">Non-Disclosure Agreement (NDA)</option>
+      <option value="Service Agreement">Service Agreement</option>
+      <option value="Lease Agreement (Commercial)">Lease Agreement (Commercial)</option>
+      <option value="Employment Agreement">Employment Agreement</option>
+      <option value="Partnership Agreement">Partnership Agreement</option>
+      <option value="Website Terms & Conditions">Website Terms & Conditions</option>
+    </select>
+
+    <label for="terms">Key Parties & Terms:</label>
+    <textarea id="terms" name="terms" rows="10" placeholder="Paste or edit your terms here..."></textarea>
+
+    <label for="model">OpenAI Model (optional):</label>
+    <input type="text" name="model" id="model" placeholder="e.g., gpt-4, gpt-4o-mini">
+
+    <button type="submit">Generate Legal Draft</button>
+  </form>
+
+  <hr>
+
+  <form method="POST" action="/respond_notice">
+    <h3>Respond to Notice</h3>
+    <textarea name="notice_text" placeholder="Paste notice here" rows="6"></textarea>
+    <select name="intent">
+      <option value="conciliatory">Conciliatory</option>
+      <option value="defensive">Defensive</option>
+      <option value="neutral" selected>Neutral</option>
+    </select>
+    <button type="submit">Generate Response</button>
+  </form>
+
+  <hr>
+  <form method="POST" action="/track_deadlines">
+    <h3>Track Legal Deadlines</h3>
+    <select name="business_type">
+      <option value="llc">LLC</option>
+      <option value="sole">Sole Proprietor</option>
+      <option value="partnership">Partnership</option>
+    </select>
+    <button type="submit">Check Deadlines</button>
+  </form>
+
+  <div class="form-box">
+    <form action="/upload_sample_doc" method="post" enctype="multipart/form-data">
+        <h3>📤 Upload Sample Legal Document (to train Vector DB)</h3>
+
+        <label for="doc_type_upload">Document Type</label>
+        <input type="text" name="doc_type" id="doc_type_upload" placeholder="e.g. NDA, Service Agreement" required>
+
+        <label for="file">Upload File</label>
+        <input type="file" name="file" id="file" accept=".txt,.md,.docx,.pdf" required>
+
+        <button type="submit">📚 Upload & Ingest</button>
+    </form>
+</div>
+  
+
+  {% if result %}
+    <h2>Generated Draft & Review</h2>
+    <pre>{{ result }}</pre>
+    {% if pdf_url %}
+      <p><a href="{{ pdf_url }}" target="_blank" class="btn btn-primary">Download PDF</a></p>
+    {% endif %}
+  {% endif %}
+
+
+  <script>
+    const summaries = {
+      "Non-Disclosure Agreement (NDA)": `Disclosing Party: [Company A]
+Receiving Party: [Company B]
+Definition of Confidential Info, Obligations, Exclusions, Term, Governing Law.`,
+
+      "Service Agreement": `Service Provider: [Provider Name]
+Client: [Client Name]
+Scope, Fees, Termination, Confidentiality, IP Ownership, Liability.`,
+
+      "Lease Agreement (Commercial)": `Landlord: [Landlord Name]
+Tenant: [Tenant Name]
+Premises, Term, Rent, Repairs, Default.`,
+
+      "Employment Agreement": `Employer: [Company Name]
+Employee: [Employee Name]
+Position, Salary, Confidentiality, Termination, Non-Compete.`,
+
+      "Partnership Agreement": `Partner A: [Name]
+Partner B: [Name]
+Purpose, Contributions, Profit Sharing, Voting, Withdrawal.`,
+
+      "Website Terms & Conditions": `Provider: [Company Name]
+User: Any visitor of [website URL]
+Terms Acceptance, User Conduct, IP, Liability, Governing Law.`
+    };
+
+    function populateSummary() {
+      const selected = document.getElementById("doc_type").value;
+      if (summaries[selected]) {
+        document.getElementById("terms").value = summaries[selected];
+      }
+    }
+  </script>
+</body>
+</html>
