@@ -1,0 +1,9 @@
+Flask
+openai
+python-dotenv
+weasyprint
+markdown
+langchain
+chromadb
+pymupdf
+docx2txt 
