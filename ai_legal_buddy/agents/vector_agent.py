@@ -66,17 +66,23 @@ class VectorAgent:
 
     @staticmethod
     def ingest_document(path, doc_type):
-        docs = VectorAgent._load_document(path)
-        for doc in docs:
-            doc.metadata["doc_type"] = doc_type
+        try:
+            print(f"[INFO] Loading document: {path}")
+            docs = VectorAgent._load_document(path)
+            print(f"[INFO] Loaded {len(docs)} document(s)")
+            for doc in docs:
+                doc.metadata["doc_type"] = doc_type
 
-        text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
-        chunks = text_splitter.split_documents(docs)
+            text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+            chunks = text_splitter.split_documents(docs)
+            print(f"[INFO] Split into {len(chunks)} chunk(s)")
 
-        db = Chroma.from_documents(
-            documents=chunks,
-            embedding=VectorAgent.EMBEDDING_MODEL,
-            persist_directory=VectorAgent.DB_PATH
-        )
-        db.persist()
-        print(f"[✅] Ingested and saved to Chroma Vector DB from: {path}")
+            db = Chroma.from_documents(
+                documents=chunks,
+                embedding=VectorAgent.EMBEDDING_MODEL,
+                persist_directory=VectorAgent.DB_PATH
+            )
+            db.persist()
+            print(f"[✅] Ingested and saved to Chroma Vector DB from: {path}")
+        except Exception as e:
+            print(f"[ERROR] Failed to ingest document: {e}")
